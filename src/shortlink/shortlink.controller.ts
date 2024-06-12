@@ -1,11 +1,13 @@
 import {
   Controller,
+  Get,
   Post,
   Body,
+  Param,
   Res,
   NotFoundException,
 } from '@nestjs/common';
-import { ShortlinkService } from './shortlink.service'; // Import the interface here
+import { ShortlinkService, URLMapping } from './shortlink.service'; // I imported the interface here
 import { Response } from 'express';
 
 @Controller('shortlink')
@@ -23,6 +25,17 @@ export class ShortlinkController {
     const longUrl = this.shortlinkService.decode(shortUrl);
     if (longUrl) {
       return res.redirect(longUrl);
+    } else {
+      throw new NotFoundException('Short URL not found');
+    }
+  }
+
+  @Get('statistic/:urlPath')
+  getStatistics(@Param('urlPath') urlPath: string): URLMapping {
+    // I used the imported interface here
+    const stats = this.shortlinkService.getStatistics(urlPath);
+    if (stats) {
+      return stats;
     } else {
       throw new NotFoundException('Short URL not found');
     }
