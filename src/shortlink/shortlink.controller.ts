@@ -2,8 +2,11 @@ import {
   Controller,
   Post,
   Body,
+  Res,
+  NotFoundException,
 } from '@nestjs/common';
 import { ShortlinkService } from './shortlink.service'; // Import the interface here
+import { Response } from 'express';
 
 @Controller('shortlink')
 export class ShortlinkController {
@@ -15,4 +18,13 @@ export class ShortlinkController {
     return { shortUrl };
   }
 
+  @Post('decode')
+  decode(@Body('url') shortUrl: string, @Res() res: Response) {
+    const longUrl = this.shortlinkService.decode(shortUrl);
+    if (longUrl) {
+      return res.redirect(longUrl);
+    } else {
+      throw new NotFoundException('Short URL not found');
+    }
+  }
 }
