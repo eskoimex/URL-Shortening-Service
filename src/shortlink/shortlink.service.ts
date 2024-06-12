@@ -40,6 +40,7 @@ export class ShortlinkService {
    * @param shortUrl - The decode argument contains a shortUrl.
    * @returns A String containing the longUrl.
    * @returns null if longUrl does not exist in store.
+   * @throws NotFoundException - If shortUrl is not found.
    */
   decode(shortUrl: string): string | null {
     const urlHash = shortUrl.replace(this.baseUrl, '');
@@ -49,5 +50,16 @@ export class ShortlinkService {
       return urlMapping.longUrl;
     }
     return null;
+  }
+
+  /**
+   * Return basic stat of a short URL path.
+   * @param urlPath - The getStatistics argument contains a urlPath.
+   * @returns A Json containing the stat in the store.
+   * @returns null if stat does not exist in store.
+   * @throws NotFoundException - If shortUrl is not found.
+   */
+  getStatistics(urlPath: string): URLMapping | null {
+    return this.urlStore.get(urlPath) || null;
   }
 }
