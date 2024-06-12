@@ -34,4 +34,20 @@ export class ShortlinkService {
     });
     return shortUrl;
   }
+
+  /**
+   * Decodes a shortened URL to its original URL.
+   * @param shortUrl - The decode argument contains a shortUrl.
+   * @returns A String containing the longUrl.
+   * @returns null if longUrl does not exist in store.
+   */
+  decode(shortUrl: string): string | null {
+    const urlHash = shortUrl.replace(this.baseUrl, '');
+    const urlMapping = this.urlStore.get(urlHash);
+    if (urlMapping) {
+      urlMapping.visits += 1;
+      return urlMapping.longUrl;
+    }
+    return null;
+  }
 }
